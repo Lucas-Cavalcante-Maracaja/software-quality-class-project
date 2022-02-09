@@ -8,6 +8,13 @@ module.exports = class UserRepository{
             throw new Error("Usuário não encontrado")
         return user
     }
+
+    async findOneById(id){
+        const user = await this.collection.findOne({_id: id})
+        if(user===null)
+            throw new Error("Usuário não encontrado")
+        return user
+    }
     async insert (user){
         await this.collection.insertOne(user)
         return user
