@@ -114,12 +114,42 @@ describe("UserApi - teste de sistema",()=>{
             })
         })
         describe("PUT",()=>{
-            test.todo("Deve alterar o usuario")
-            test.todo("Deve retornar 404 quando não encontrar usuário")
+            test("Deve alterar o usuario",async()=>{
+                const user = await userRepository.insert({
+                    nome: "Doe",
+                    email: "john@doe.com"
+                })
+                const response = await request(app).put('/users/'+user._id).send({
+                    nome: "Doe2",
+                    email: "john2@doe.com"
+                })
+                expect(response.statusCode).toBe(200)
+                expect(response.body).toEqual(expect.objectContaining({
+                    nome: "Doe2",
+                    email: "john2@doe.com"
+                }))
+            })
+            test("Deve retornar 404 quando não encontrar usuário",async()=>{
+                const response = await request(app).put('/users/61a06c492d399952b235d8bd')
+                expect(response.statusCode).toBe(404)
+            })
         })
         describe("DELETE",()=>{
-            test.todo("Deve excluir o usuario")
-            test.todo("Deve retornar 404 quando não encontrar usuário")
+            test("Deve excluir o usuario",async()=>{
+                const user = await userRepository.insert({
+                    nome: "Doe",
+                    email: "john@doe.com"
+                })
+                const response = await request(app).delete('/users/'+user._id)
+                expect(response.statusCode).toBe(200)
+                const response2 = await request(app).get('/users/'+user._id)
+                expect(response2.statusCode).toBe(404)
+            })
+            test("Deve retornar 404 quando não encontrar usuário",async()=>{
+
+                const response = await request(app).delete('/users/61a06c492d399952b235d8bd')
+                expect(response.statusCode).toBe(404)
+            })
         })
     })
 })

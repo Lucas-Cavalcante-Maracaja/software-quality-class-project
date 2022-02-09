@@ -67,5 +67,26 @@ app.get('/users/:id', async (request,response) => {
     }
     
 })
+app.put('/users/:id',async (request,response)=>{
+    try{
+        await userRepository.update(ObjectId(request.params.id),request.body)
+        const user = await userRepository.findOneById(ObjectId(request.params.id))
+        response.status(200).send(user)
+    }catch (ex){
+        if(ex.message === "Não foi possivel alterar"){
+            response.status(404).send()
+        }
+    }
+})
 
+app.delete('/users/:id',async (request,response)=>{
+    try{
+        await userRepository.delete(ObjectId(request.params.id))
+        response.status(200).send()
+    }catch (ex){
+        if(ex.message === "Não foi possivel excluir"){
+            response.status(404).send()
+        }
+    }
+})
 module.exports = app;
